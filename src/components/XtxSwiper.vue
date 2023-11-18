@@ -7,7 +7,7 @@ const onChange: UniHelper.SwiperOnChange = (event) => {
   // ！非空断言，主观上排除掉空值情况
   activeIndex.value = event.detail!.current
 }
-// 定义 props 接收
+// 定义 props 接收数据
 const props = defineProps<{
   list: BannerItem[]
 }>()
