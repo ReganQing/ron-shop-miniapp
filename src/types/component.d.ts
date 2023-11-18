@@ -4,8 +4,10 @@
  * declare module 'vue'
  */
 import 'vue'
+import XtxSwiper from '@/components/XtxSwiper.vue'
 declare module 'vue' {
   export interface GlobalComponents {
-    //
+    // 轮播图组件
+    XtxSwiper: typeof XtxSwiper
   }
 }
