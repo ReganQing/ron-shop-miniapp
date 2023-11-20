@@ -6,9 +6,12 @@
  */
 import 'vue'
 import XtxSwiper from '@/components/XtxSwiper.vue'
+import XtxGuess from '@/components/XtxGuess.vue'
+
 declare module 'vue' {
   export interface GlobalComponents {
     // 轮播图组件
     XtxSwiper: typeof XtxSwiper
+    XtxGuess: typeof XtxGuess
   }
 }
