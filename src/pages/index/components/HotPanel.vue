@@ -1,25 +1,27 @@
 <script setup lang="ts">
-//
+import type { HotItem } from '@/types/home'
+
+// 定义 props 接收数据
+defineProps<{
+  list: HotItem[]
+}>()
 </script>
 
 <template>
   <!-- 推荐专区 -->
   <view class="panel hot">
-    <view class="item" v-for="item in 4" :key="item">
+    <view class="item" v-for="item in list" :key="item.id">
       <view class="title">
-        <text class="title-text">特惠推荐</text>
-        <text class="title-desc">精选全攻略</text>
+        <text class="title-text">{{ item.title }}</text>
+        <text class="title-desc">{{ item.alt }}</text>
       </view>
       <navigator hover-class="none" url="/pages/hot/hot" class="cards">
         <image
+          v-for="src in item.pictures"
+          :key="src"
           class="image"
           mode="aspectFit"
-          src="https://pcapi-xiaotuxian-front-devtest.itheima.net/miniapp/uploads/goods_small_1.jpg"
-        ></image>
-        <image
-          class="image"
-          mode="aspectFit"
-          src="https://pcapi-xiaotuxian-front-devtest.itheima.net/miniapp/uploads/goods_small_2.jpg"
+          :src="src"
         ></image>
       </navigator>
     </view>
