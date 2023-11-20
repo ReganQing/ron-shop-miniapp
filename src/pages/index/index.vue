@@ -41,16 +41,24 @@ const onScrolltoLower = () => {
   guessRef.value?.getMore()
 }
 
+// 下拉刷新状态
 const isTriggered = ref(false)
 // 自定义下拉刷新
 const onRefresherrefresh = async () => {
+  // 重置数据
+  guessRef.value?.resetData()
   // 开启下拉动画
   isTriggered.value = true
   // 获取数据
   // await getHomeBannerData()
   // await getHomeCategoryData()
   // await getHomeHotData()
-  await Promise.all([getHomeBannerData(), getHomeCategoryData(), getHomeHotData()])
+  await Promise.all([
+    getHomeBannerData(),
+    getHomeCategoryData(),
+    getHomeHotData(),
+    guessRef.value?.getMore(),
+  ])
   // 关闭下拉动画
   isTriggered.value = false
 }

@@ -6,13 +6,19 @@ import type { PageParams } from '@/types/global'
 
 // 分页参数
 const pageParams: Required<PageParams> = {
-  page: 32,
+  page: 1,
   pageSize: 10,
 }
 
 // 标记获取分页结束
 const finish = ref(false)
 
+// 重置数据
+const resetData = () => {
+  pageParams.page = 1
+  finish.value = false
+  guessList.value = []
+}
 // 获取猜你喜欢数据
 const guessList = ref<GuessItem[]>([])
 const getHomeGoodsGuessLikeData = async () => {
@@ -40,6 +46,7 @@ onMounted(() => {
 
 // 暴露获取数据的方法
 defineExpose({
+  resetData,
   getMore: getHomeGoodsGuessLikeData,
 })
 </script>
