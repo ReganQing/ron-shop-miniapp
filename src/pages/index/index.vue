@@ -5,6 +5,7 @@ import { getHomeBannerAPI, getHomeCategoryAPI } from '@/services/home'
 import type { BannerItem, CategoryItem } from '@/types/home'
 import CustomNavbar from './components/CustomNavbar.vue'
 import CategoryPanel from './components/CategoryPanel.vue'
+import HotPanel from './components/HotPanel.vue'
 
 // 获取轮播图数据
 const bannerList = ref<BannerItem[]>([])
@@ -32,6 +33,8 @@ onLoad(() => {
   <XtxSwiper :list="bannerList" />
   <!-- 分类面板 -->
   <CategoryPanel :list="categoryList" />
+  <!-- 热门推荐 -->
+  <HotPanel />
   <view class="index">index</view>
 </template>
 
