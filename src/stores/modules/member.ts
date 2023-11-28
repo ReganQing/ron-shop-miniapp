@@ -26,7 +26,6 @@ export const useMemberStore = defineStore(
       clearProfile,
     }
   },
-  // TODO: 持久化
   {
     // 网页端持久化
     // persist: true,

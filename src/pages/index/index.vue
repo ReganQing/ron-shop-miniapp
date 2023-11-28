@@ -2,12 +2,12 @@
 import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { getHomeBannerAPI, getHomeCategoryAPI, getHomeHotAPI } from '@/services/home'
-import type { BannerItem, CategoryItem, GuessItem, HotItem } from '@/types/home'
+import type { BannerItem, CategoryItem, HotItem } from '@/types/home'
 import CustomNavbar from './components/CustomNavbar.vue'
 import CategoryPanel from './components/CategoryPanel.vue'
 import HotPanel from './components/HotPanel.vue'
 import PageSkeleton from './components/PageSkeleton.vue'
-import type { XtxGuessInstance } from '@/types/component'
+import { useGuessList } from '@/composables'
 
 // 获取轮播图数据
 const bannerList = ref<BannerItem[]>([])
@@ -38,12 +38,7 @@ onLoad(async () => {
   isLoading.value = false
 })
 
-// 获取滚动实例
-const guessRef = ref<XtxGuessInstance>()
-// 滚动触底时触发函数
-const onScrolltoLower = () => {
-  guessRef.value?.getMore()
-}
+const { guessRef, onScrolltoLower } = useGuessList()
 
 // 下拉刷新状态
 const isTriggered = ref(false)
