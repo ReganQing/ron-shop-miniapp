@@ -1,4 +1,4 @@
-import type { CategoryItem } from '@/types/home'
+import type { CategoryTopItem } from '@/types/category'
 import { http } from '@/utils/http'
 
 /**
@@ -6,7 +6,7 @@ import { http } from '@/utils/http'
  * @returns 分类列表数据集合
  */
 export const getCategoryTopAPI = () => {
-  return http<CategoryItem[]>({
+  return http<CategoryTopItem[]>({
     method: 'GET',
     url: '/category/top',
   })
