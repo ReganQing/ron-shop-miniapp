@@ -110,6 +110,14 @@
 					"style": {
 						"navigationBarTitleText": "设置"
 					}
+				},
+				{
+					"path": "profile/profile",
+					"style": {
+						"navigationStyle": "custom",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "个人信息"
+					}
 				}
 			]
 		}
@@ -120,7 +128,9 @@
 			// 在指定网络下预下载
 			"network": "all",
 			// 进入页面后预下载分包的 root 或 name。
-			"packages": ["pagesMember"]
+			"packages": [
+				"pagesMember"
+			]
 		}
 	}
 }
