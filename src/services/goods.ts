@@ -1,3 +1,4 @@
+import type { GoodsResult } from '@/types/goods'
 import { http } from '@/utils/http'
 
 /**
@@ -6,7 +7,7 @@ import { http } from '@/utils/http'
  * @returns 商品详情信息
  */
 export const getGoodsByIdAPI = (id: string) => {
-  return http({
+  return http<GoodsResult>({
     method: 'GET',
     url: '/goods',
     data: {
