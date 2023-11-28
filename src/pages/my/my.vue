@@ -15,6 +15,7 @@ const orderTypes = [
 // 获取会员信息
 const memberStore = useMemberStore()
 
+// 调用猜你喜欢组合式函数
 const { guessRef, onScrolltoLower } = useGuessList()
 </script>
 
