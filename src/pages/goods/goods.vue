@@ -2,7 +2,10 @@
 import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { getGoodsByIdAPI } from '@/services/goods'
+import AddressPanel from './components/AddressPanel.vue'
+import ServicePanel from './components/ServicePanel.vue'
 import type { GoodsResult } from '@/types/goods'
+
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
 
@@ -42,6 +45,15 @@ const popup = ref<{
   open: (type?: UniHelper.UniPopupType) => void
   close: () => void
 }>()
+
+// 当点击操作选项
+const popupName = ref<'address' | 'service'>()
+const openPopup = (name: typeof popupName.value) => {
+  // 修改弹出层名字
+  popupName.value = name
+  // 打开弹出层
+  popup.value?.open()
+}
 </script>
 
 <template>
@@ -78,12 +90,12 @@ const popup = ref<{
           <text class="label">选择</text>
           <text class="text ellipsis"> 请选择商品规格 </text>
         </view>
-        <view class="item arrow">
+        <view class="item arrow" @tap="openPopup('address')">
           <text class="label">送至</text>
           <text class="text ellipsis"> 请选择收获地址 </text>
         </view>
-        <view class="item arrow">
-          <text class="label" @tap="popup?.open()">服务</text>
+        <view class="item arrow" @tap="openPopup('service')">
+          <text class="label">服务</text>
           <text class="text ellipsis"> 无忧退 快速退款 免费包邮 </text>
         </view>
       </view>
@@ -155,9 +167,8 @@ const popup = ref<{
 
   <!-- uni-ui 弹出层 -->
   <uni-popup ref="popup" type="bottom" background-color="#fff">
-    <view>内容一</view>
-    <view>内容二</view>
-    <button :disabled="false" hover-class="button-hover" @tap="popup?.close()">关闭弹出层</button>
+    <ServicePanel v-if="popupName === 'service'" @close="popup?.close()" />
+    <AddressPanel v-if="popupName === 'address'" @close="popup?.close()" />
   </uni-popup>
 </template>
 
