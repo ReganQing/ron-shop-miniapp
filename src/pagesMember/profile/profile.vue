@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { getMemberProfileAPI, putMemberProfileAPI } from '@/services/profile'
 import type { ProfileDetail } from '@/types/member'
 import { onLoad } from '@dcloudio/uni-app'
+import { useMemberStore } from '@/stores'
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
@@ -19,6 +20,8 @@ onLoad(() => {
   getMemberProfileData()
 })
 
+// 获取 store 信息
+const memberStore = useMemberStore()
 // 修改头像
 const onAvatarChange = () => {
   // 调用拍照/选择图片
@@ -39,7 +42,10 @@ const onAvatarChange = () => {
           if (res.statusCode === 200) {
             // 更新头像
             const avatar = JSON.parse(res.data).result.avatar
+            // 个人信息页数据更新
             profile.value!.avatar = avatar
+            // Store头像更新
+            memberStore.profile!.avatar = avatar
             uni.showToast({ icon: 'success', title: '更新成功' })
           } else {
             uni.showToast({ icon: 'error', title: '出现错误' })
@@ -55,7 +61,13 @@ const onSubmit = async () => {
   const res = await putMemberProfileAPI({
     nickname: profile.value?.nickname,
   })
+  // 更新 Store 里的个人信息
+  memberStore.profile!.nickname = res.result.nickname
   uni.showToast({ icon: 'success', title: '保存成功' })
+  // 返回上一页
+  setTimeout(() => {
+    uni.navigateBack()
+  }, 400)
 }
 </script>
 
@@ -83,7 +95,7 @@ const onSubmit = async () => {
         </view>
         <view class="form-item">
           <text class="label">昵称</text>
-          <input class="input" type="text" placeholder="请填写昵称" v-model="profile!.nickname" />
+          <input class="input" type="text" placeholder="请填写昵称" v-model="profile.nickname" />
         </view>
         <view class="form-item">
           <text class="label">性别</text>

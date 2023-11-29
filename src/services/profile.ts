@@ -18,7 +18,7 @@ export const getMemberProfileAPI = () => {
  * @returns 成功
  */
 export const putMemberProfileAPI = (data: ProfileParams) => {
-  return http({
+  return http<ProfileDetail>({
     method: 'PUT',
     url: '/member/profile',
     data,
