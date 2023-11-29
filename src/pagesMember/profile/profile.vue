@@ -65,13 +65,27 @@ const onGenderChange: UniHelper.RadioGroupOnChange = (event) => {
 const onBirthdayChange: UniHelper.DatePickerOnChange = (event) => {
   profile.value.birthday = event.detail.value
 }
+
+// 修改城市
+let fullLocationCode: [string, string, string] = ['', '', '']
+const onFullLocationChange: UniHelper.RegionPickerOnChange = (event) => {
+  // 修改前端界面显示
+  profile.value.fullLocation = event.detail.value.join(' ')
+  // 提交数据进行后端更新
+  fullLocationCode = event.detail.code!
+}
+
 // 点击保存提交表单
 const onSubmit = async () => {
-  const { nickname, gender, birthday } = profile.value
+  const { nickname, gender, birthday, profession } = profile.value
   const res = await putMemberProfileAPI({
     nickname,
     gender,
     birthday,
+    profession,
+    provinceCode: fullLocationCode[0] || undefined,
+    cityCode: fullLocationCode[1] || undefined,
+    countyCode: fullLocationCode[2] || undefined,
   })
   // 更新 Store 里的个人信息
   memberStore.profile!.nickname = res.result.nickname
@@ -138,14 +152,19 @@ const onSubmit = async () => {
         </view>
         <view class="form-item">
           <text class="label">城市</text>
-          <picker class="picker" mode="region" :value="profile?.fullLocation?.split(' ')">
+          <picker
+            class="picker"
+            @change="onFullLocationChange"
+            mode="region"
+            :value="profile?.fullLocation?.split(' ')"
+          >
             <view v-if="profile?.fullLocation">{{ profile.fullLocation }}</view>
             <view class="placeholder" v-else>请选择城市</view>
           </picker>
         </view>
         <view class="form-item">
           <text class="label">职业</text>
-          <input class="input" type="text" placeholder="请填写职业" :value="profile?.profession" />
+          <input class="input" type="text" placeholder="请填写职业" v-model="profile.profession" />
         </view>
       </view>
       <!-- 提交按钮 -->
