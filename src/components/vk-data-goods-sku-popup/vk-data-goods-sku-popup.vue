@@ -412,7 +412,7 @@ export default {
         default: {
           priceColor: 'rgb(254, 86, 10)',
           buyNowColor: '#ffffff',
-          buyNowBackgroundColor: 'rgb(254, 86, 10)',
+          buyNowBackgroundColor: 'rgb(39, 186, 155)',
           addCartColor: '#ffffff',
           addCartBackgroundColor: 'rgb(255, 148, 2)',
           btnStyle: {
@@ -774,7 +774,7 @@ export default {
       if (stockNum <= 0) {
         that.outFoStock = true
       }
-      // 计算有多小种可选路径
+      // 计算有多少种可选路径
       let result = skuList.reduce(
         (arrs, items) => {
           return arrs.concat(
@@ -797,7 +797,7 @@ export default {
         },
         [[]],
       )
-      // console.timeEnd('计算有多小种可选路径需要的时间是');
+      // console.timeEnd('计算有多少种可选路径需要的时间是');
     },
     getArrayToSting(arr) {
       let str = ''
