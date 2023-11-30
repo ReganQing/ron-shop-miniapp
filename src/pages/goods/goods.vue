@@ -5,7 +5,11 @@ import { getGoodsByIdAPI } from '@/services/goods'
 import AddressPanel from './components/AddressPanel.vue'
 import ServicePanel from './components/ServicePanel.vue'
 import type { GoodsResult } from '@/types/goods'
-import type { SkuPopupLocaldata } from '@/components/vk-data-goods-sku-popup/vk-data-goods-sku-popup'
+import type {
+  SkuPopupLocaldata,
+  SkuPopupInstance,
+} from '@/components/vk-data-goods-sku-popup/vk-data-goods-sku-popup'
+import { computed } from 'vue'
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
@@ -97,6 +101,13 @@ const openSkuPopup = (val: SkuMode) => {
   // 修改按钮模式
   mode.value = val
 }
+
+// SKU 组件实例
+const skuPopupRef = ref<SkuPopupInstance>()
+// 计算被选中的值
+const selectArrText = computed(() => {
+  return skuPopupRef.value?.selectArr?.join(' ').trim() || '请选择商品规格'
+})
 </script>
 
 <template>
@@ -104,8 +115,11 @@ const openSkuPopup = (val: SkuMode) => {
     v-model="isShowSku"
     :localdata="localdata"
     :mode="mode"
+    theme="green"
     add-cart-background-color="#fbaa69"
     buy-now-background-color="#33ba9b"
+    add-cart-color="#ffffff"
+    ref="skuPopupRef"
   />
   <scroll-view scroll-y class="viewport">
     <!-- 基本信息 -->
@@ -138,7 +152,7 @@ const openSkuPopup = (val: SkuMode) => {
       <view class="action">
         <view @tap="openSkuPopup(SkuMode.Both)" class="item arrow">
           <text class="label">选择</text>
-          <text class="text ellipsis"> 请选择商品规格 </text>
+          <text class="text ellipsis"> {{ selectArrText }} </text>
         </view>
         <view class="item arrow" @tap="openPopup('address')">
           <text class="label">送至</text>
