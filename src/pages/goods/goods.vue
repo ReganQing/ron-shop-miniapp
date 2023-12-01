@@ -51,11 +51,6 @@ const getGoodsByIdData = async () => {
   }
 }
 
-// 页面加载
-onLoad(() => {
-  getGoodsByIdData()
-})
-
 // 轮播图变化时下标同步变化
 const currentIndex = ref(0)
 const onChange: UniHelper.SwiperOnChange = (event) => {
@@ -120,6 +115,20 @@ const onAddCart = async (event: SkuPopupEvent) => {
   // 关闭 sku 弹窗
   isShowSku.value = false
 }
+
+// 立即购买事件
+const onBuyNow = (event: SkuPopupEvent) => {
+  // 跳转页面并传参
+  uni.navigateTo({ url: `/pagesOrder/create/create?skuId=${event._id}&count=${event.buy_num}` })
+  // 关闭 sku 组件
+  isShowSku.value = false
+}
+
+/* todo 商品详情页面配送地址的选择 */
+// 页面加载数据初始化
+onLoad(() => {
+  getGoodsByIdData()
+})
 </script>
 
 <template>
@@ -133,6 +142,7 @@ const onAddCart = async (event: SkuPopupEvent) => {
     add-cart-color="#ffffff"
     ref="skuPopupRef"
     @add-cart="onAddCart"
+    @buy-now="onBuyNow"
   />
   <scroll-view scroll-y class="viewport">
     <!-- 基本信息 -->
@@ -245,7 +255,11 @@ const onAddCart = async (event: SkuPopupEvent) => {
   <!-- uni-ui 弹出层 -->
   <uni-popup ref="popup" type="bottom" background-color="#fff">
     <ServicePanel v-if="popupName === 'service'" @close="popup?.close()" />
-    <AddressPanel v-if="popupName === 'address'" @close="popup?.close()" />
+    <AddressPanel
+      v-if="popupName === 'address'"
+      @close="popup?.close()"
+      :addressList="goods!.userAddresses"
+    />
   </uni-popup>
 </template>
 
