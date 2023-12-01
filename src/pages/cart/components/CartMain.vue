@@ -91,7 +91,7 @@ const onPayment = () => {
     return uni.showToast({ icon: 'none', title: '请选择商品' })
   }
   // 跳转到结算页
-  uni.showToast({ icon: 'none', title: '等待完成' })
+  uni.navigateTo({ url: '/pagesOrder/create/create' })
 }
 // 页面展示时进行初始化调用
 onShow(() => {
@@ -188,6 +188,7 @@ onShow(() => {
       </navigator>
     </view>
     <!-- 猜你喜欢 -->
+    <!-- todo 猜你喜欢的分页加载和底部安全区的适配 -->
     <XtxGuess ref="guessRef"></XtxGuess>
     <!-- 底部占位空盒子 -->
     <view class="toolbar-height"></view>
