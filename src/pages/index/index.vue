@@ -49,9 +49,6 @@ const onRefresherrefresh = async () => {
   // 开启下拉动画
   isTriggered.value = true
   // 获取数据
-  // await getHomeBannerData()
-  // await getHomeCategoryData()
-  // await getHomeHotData()
   await Promise.all([
     getHomeBannerData(),
     getHomeCategoryData(),

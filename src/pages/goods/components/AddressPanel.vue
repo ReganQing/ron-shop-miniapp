@@ -11,7 +11,7 @@ defineProps<{
 }>()
 
 // 标记是否选中
-const isSelected = ref(false)
+// const isSelected = ref(1)
 </script>
 
 <template>
@@ -25,8 +25,7 @@ const isSelected = ref(false)
       <view class="item" v-for="item in addressList" :key="item.id">
         <view class="user">{{ item.receiver }} {{ item.contact }}</view>
         <view class="address">{{ item.fullLocation }}{{ item.address }}</view>
-        <text v-if="item.isDefault" class="icon icon-checked"></text>
-        <text v-else class="icon icon-ring"></text>
+        <text :class="item.isDefault ? 'icon icon-checked' : 'icon icon-ring'"></text>
       </view>
     </view>
     <view class="footer">

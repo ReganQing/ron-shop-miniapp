@@ -11,6 +11,10 @@ import type { InputNumberBoxEvent } from '@/components/vk-data-input-number-box/
 import { onShow } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import { computed } from 'vue'
+import { useGuessList } from '@/composables'
+
+// 获取屏幕边界到安全区域距离
+const { safeAreaInsets } = uni.getSystemInfoSync()
 
 // 获取用户登录信息
 const memberStore = useMemberStore()
@@ -93,6 +97,9 @@ const onPayment = () => {
   // 跳转到结算页
   uni.navigateTo({ url: '/pagesOrder/create/create' })
 }
+
+const { guessRef, onScrolltoLower } = useGuessList()
+
 // 页面展示时进行初始化调用
 onShow(() => {
   if (memberStore.profile) {
@@ -102,7 +109,7 @@ onShow(() => {
 </script>
 
 <template>
-  <scroll-view scroll-y class="scroll-view">
+  <scroll-view scroll-y class="scroll-view" @scrolltolower="onScrolltoLower">
     <!-- 已登录: 显示购物车 -->
     <template v-if="memberStore.profile">
       <!-- 购物车列表 -->
@@ -164,8 +171,11 @@ onShow(() => {
           <button class="button">去首页看看</button>
         </navigator>
       </view>
+      <!-- 猜你喜欢 -->
+      <!-- todo 猜你喜欢的分页加载和底部安全区的适配 -->
+      <XtxGuess ref="guessRef"></XtxGuess>
       <!-- 吸底工具栏 -->
-      <view class="toolbar">
+      <view class="toolbar" :style="{ paddingBottom: safeAreaInsets?.bottom + 'rpx' }">
         <text @tap="onChnageSelectedAll" class="all" :class="{ checked: isSelectedAll }">全选</text>
         <text class="text">合计:</text>
         <text class="amount">{{ selectedCartListCost }}</text>
@@ -187,9 +197,6 @@ onShow(() => {
         <button class="button">去登录</button>
       </navigator>
     </view>
-    <!-- 猜你喜欢 -->
-    <!-- todo 猜你喜欢的分页加载和底部安全区的适配 -->
-    <XtxGuess ref="guessRef"></XtxGuess>
     <!-- 底部占位空盒子 -->
     <view class="toolbar-height"></view>
   </scroll-view>
