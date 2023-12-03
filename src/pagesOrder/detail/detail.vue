@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { useGuessList } from '@/composables'
-import { onReady } from '@dcloudio/uni-app'
+import { onLoad, onReady } from '@dcloudio/uni-app'
+import { getMemberOrderByIdAPI } from '@/services/order'
+import type { OrderResult } from '@/types/order'
 import { ref } from 'vue'
+import { OrderState, orderStateList } from '@/services/constants'
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
@@ -34,9 +37,11 @@ const query = defineProps<{
 const pages = getCurrentPages()
 
 // 获取当前页面实例，为pages数组的最后一项
-const currentPageInstance = pages.at(-1) as any
+// 基于小程序的 Page 实例类型扩展 uni-app 的 Page
+type PageInstance = Page.PageInstance & WechatMiniprogram.Page.InstanceMethods<any>
+const currentPageInstance = pages.at(-1) as PageInstance
 
-// 页面渲染完毕，绑定动画效果
+// 页面渲染完毕，绑定关键帧动画
 onReady(() => {
   // 动画效果,导航栏背景色
   currentPageInstance.animate(
@@ -70,6 +75,18 @@ onReady(() => {
     endScrollOffset: 50,
   })
 })
+
+// 获取订单详情
+const orderDetail = ref<OrderResult>()
+const getMemberOrderByIdData = async () => {
+  const res = await getMemberOrderByIdAPI(query.id)
+  orderDetail.value = res.result
+}
+
+// 页面加载初始化数据
+onLoad(() => {
+  getMemberOrderByIdData()
+})
 </script>
 
 <template>
@@ -87,11 +104,11 @@ onReady(() => {
     </view>
   </view>
   <scroll-view scroll-y class="viewport" id="scroller" @scrolltolower="onScrolltoLower">
-    <template v-if="true">
+    <template v-if="orderDetail">
       <!-- 订单状态 -->
       <view class="overview" :style="{ paddingTop: safeAreaInsets!.top + 20 + 'px' }">
         <!-- 待付款状态:展示去支付按钮和倒计时 -->
-        <template v-if="true">
+        <template v-if="orderDetail?.orderState === OrderState.WAITTOPAY">
           <view class="status icon-clock">等待付款</view>
           <view class="tips">
             <text class="money">应付金额: ¥ 99.00</text>
@@ -101,9 +118,10 @@ onReady(() => {
           <view class="button">去支付</view>
         </template>
         <!-- 其他订单状态:展示再次购买按钮 -->
+        <!-- todo 再次购买 -->
         <template v-else>
           <!-- 订单状态文字 -->
-          <view class="status"> 待付款 </view>
+          <view class="status"> {{ orderStateList[orderDetail.orderState].text }} </view>
           <view class="button-group">
             <navigator
               class="button"
@@ -222,6 +240,7 @@ onReady(() => {
         </template>
       </view>
     </template>
+    <!-- todo 骨架屏 -->
     <template v-else>
       <!-- 骨架屏组件 -->
       <PageSkeleton />
