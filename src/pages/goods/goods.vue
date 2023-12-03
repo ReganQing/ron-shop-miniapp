@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { onLoad } from '@dcloudio/uni-app'
+import { onShow } from '@dcloudio/uni-app'
 import { getGoodsByIdAPI } from '@/services/goods'
 import AddressPanel from './components/AddressPanel.vue'
 import ServicePanel from './components/ServicePanel.vue'
@@ -142,7 +142,7 @@ const showAddress = computed(() => {
 })
 
 // 页面加载数据初始化
-onLoad(() => {
+onShow(() => {
   getGoodsByIdData()
 })
 </script>

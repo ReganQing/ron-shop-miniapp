@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { AddressItem } from '@/types/address'
+import { onShow } from '@dcloudio/uni-app'
+import { ref } from 'vue'
 // 子调父
 const emit = defineEmits<{
   (event: 'close'): void
@@ -12,7 +14,7 @@ defineProps<{
 }>()
 
 // 标记是否选中
-// const isSelected = ref(1)
+const isSelected = ref<0 | 1>(1)
 </script>
 
 <template>
@@ -26,11 +28,16 @@ defineProps<{
       <view class="item" v-for="item in addressList" :key="item.id" @tap="emit('getAddress', item)">
         <view class="user">{{ item.receiver }} {{ item.contact }}</view>
         <view class="address">{{ item.fullLocation }}{{ item.address }}</view>
-        <text :class="item.isDefault ? 'icon icon-checked' : 'icon icon-ring'"></text>
+        <text
+          @tap="isSelected === 1 ? 0 : 1"
+          :class="item.isDefault === isSelected ? 'icon icon-checked' : 'icon icon-ring'"
+        ></text>
       </view>
     </view>
     <view class="footer">
-      <view class="button primary"> 新建地址 </view>
+      <navigator class="button primary" url="/pagesMember/address-form/address-form">
+        新建地址
+      </navigator>
       <view v-if="false" class="button primary">确定</view>
     </view>
   </view>
