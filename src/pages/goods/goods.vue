@@ -12,6 +12,7 @@ import type {
 } from '@/components/vk-data-goods-sku-popup/vk-data-goods-sku-popup'
 import { computed } from 'vue'
 import { postMemberCartAPI } from '@/services/cart'
+import type { AddressItem } from '@/types/address'
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
@@ -124,7 +125,22 @@ const onBuyNow = (event: SkuPopupEvent) => {
   isShowSku.value = false
 }
 
-/* todo 商品详情页面配送地址的选择 */
+// 商品详情页面配送地址的选择
+const address = ref<AddressItem>()
+const selectAddress = (selectedItem: AddressItem) => {
+  address.value = selectedItem
+  console.log(address.value)
+  popup.value?.close()
+}
+// 前端展示选择地址
+const showAddress = computed(() => {
+  if (address.value) {
+    return address.value?.fullLocation + address.value?.address
+  } else {
+    return '请选择收获地址'
+  }
+})
+
 // 页面加载数据初始化
 onLoad(() => {
   getGoodsByIdData()
@@ -179,7 +195,7 @@ onLoad(() => {
         </view>
         <view class="item arrow" @tap="openPopup('address')">
           <text class="label">送至</text>
-          <text class="text ellipsis"> 请选择收获地址 </text>
+          <text class="text ellipsis"> {{ showAddress }} </text>
         </view>
         <view class="item arrow" @tap="openPopup('service')">
           <text class="label">服务</text>
@@ -259,6 +275,7 @@ onLoad(() => {
       v-if="popupName === 'address'"
       @close="popup?.close()"
       :addressList="goods!.userAddresses"
+      @getAddress="selectAddress"
     />
   </uni-popup>
 </template>

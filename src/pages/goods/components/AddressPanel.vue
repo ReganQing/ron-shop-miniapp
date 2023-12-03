@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import type { AddressItem } from '@/types/address'
-import { ref } from 'vue'
 // 子调父
 const emit = defineEmits<{
   (event: 'close'): void
+  (event: 'getAddress', address: AddressItem): void
 }>()
 
+// 父传子，定义props接收数据
 defineProps<{
   addressList: AddressItem[]
 }>()
@@ -22,7 +23,7 @@ defineProps<{
     <view class="title">配送至</view>
     <!-- 内容 -->
     <view class="content">
-      <view class="item" v-for="item in addressList" :key="item.id">
+      <view class="item" v-for="item in addressList" :key="item.id" @tap="emit('getAddress', item)">
         <view class="user">{{ item.receiver }} {{ item.contact }}</view>
         <view class="address">{{ item.fullLocation }}{{ item.address }}</view>
         <text :class="item.isDefault ? 'icon icon-checked' : 'icon icon-ring'"></text>
