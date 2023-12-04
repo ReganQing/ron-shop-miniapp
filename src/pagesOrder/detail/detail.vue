@@ -6,6 +6,7 @@ import {
   getMemberOrderConsignmentByIdAPI,
   putMemberOrderReceiptByIdAPI,
   getMemberOrderLogisticsByIdAPI,
+  deleteMemberOrderAPI,
 } from '@/services/order'
 import type { OrderResult, LogisticItem } from '@/types/order'
 import { payMockAPI, payWxPayMiniPayAPI } from '@/services/pay'
@@ -155,6 +156,27 @@ const getMemberOrderLogisticsByIdData = async () => {
   const res = await getMemberOrderLogisticsByIdAPI(query.id)
   logisticList.value = res.result.list
 }
+
+// 删除订单
+const onOrderDelete = () => {
+  // 二次删除确认
+  uni.showModal({
+    title: '删除确认',
+    content: '是否要删除订单',
+    showCancel: true,
+    cancelText: '取消',
+    cancelColor: '#000000',
+    confirmText: '确定',
+    confirmColor: '#3CC51F',
+    success: async (result) => {
+      if (result.confirm) {
+        await deleteMemberOrderAPI({ ids: [query.id] })
+        // 跳转到订单列表页
+        uni.redirectTo({ url: '/pagesOrder/list/list' })
+      }
+    },
+  })
+}
 </script>
 
 <template>
@@ -254,7 +276,7 @@ const getMemberOrderLogisticsByIdData = async () => {
             class="navigator"
             v-for="item in orderDetail.skus"
             :key="item.id"
-            :url="`/pages/goods/goods?id=${item.id}`"
+            :url="`/pages/goods/goods?id=${item.spuId}`"
             hover-class="none"
           >
             <image class="cover" :src="item.image"></image>
@@ -271,7 +293,7 @@ const getMemberOrderLogisticsByIdData = async () => {
             </view>
           </navigator>
           <!-- 待评价状态:展示按钮 -->
-          <view class="action" v-if="true">
+          <view class="action" v-if="orderDetail.orderState === OrderState.WAITTOCOMMIT">
             <view class="button primary">申请售后</view>
             <navigator url="" class="button"> 去评价 </navigator>
           </view>
@@ -312,7 +334,7 @@ const getMemberOrderLogisticsByIdData = async () => {
       <view class="toolbar" :style="{ paddingBottom: safeAreaInsets?.bottom + 'px' }">
         <!-- 待付款状态:展示支付按钮 -->
         <template v-if="orderDetail.orderState === OrderState.WAITTOPAY">
-          <view class="button primary"> 去支付 </view>
+          <view class="button primary" @tap="onOrderPay"> 去支付 </view>
           <view class="button" @tap="popup?.open?.()"> 取消订单 </view>
         </template>
         <!-- 其他订单状态:按需展示按钮 -->
@@ -340,6 +362,7 @@ const getMemberOrderLogisticsByIdData = async () => {
                 orderDetail.orderState,
               )
             "
+            @tap="onOrderDelete"
           >
             删除订单
           </view>
@@ -721,6 +744,8 @@ page {
 
   .delete {
     order: 4;
+    color: #cf4444;
+    outline: #cf4444;
   }
 
   .button {
