@@ -11,7 +11,7 @@ export enum OrderState {
   /** 已完成 */
   ALREADYDONE = 5,
   /** 已取消 */
-  ALREADYCAMCEL = 6,
+  ALREADYCANCEL = 6,
 }
 
 /** 订单状态列表 */
