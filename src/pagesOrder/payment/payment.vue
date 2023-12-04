@@ -7,11 +7,11 @@ const query = defineProps<{
 }>()
 
 // 猜你喜欢
-const { guessRef, onScrolltolower } = useGuessList()
+const { guessRef, onScrolltoLower } = useGuessList()
 </script>
 
 <template>
-  <scroll-view class="viewport" scroll-y @scrolltolower="onScrolltolower">
+  <scroll-view class="viewport" scroll-y @scrolltolower="onScrolltoLower">
     <!-- 订单状态 -->
     <view class="overview">
       <view class="status icon-checked">支付成功</view>
