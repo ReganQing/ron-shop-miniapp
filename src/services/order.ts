@@ -58,3 +58,16 @@ export const getMemberOrderByIdAPI = (id: string) => {
     url: `/member/order/${id}`,
   })
 }
+
+/**
+ * 模拟发货-内测版
+ * @description 在 DEV 环境中使用，仅在 订单状态为待发货 时，可模拟发货，调用后订单状态修改为待收货，包含模拟物流。
+ * @param id 订单Id
+ * @returns 提示语
+ */
+export const getMemberOrderConsignmentByIdAPI = (id: string) => {
+  return http({
+    method: 'GET',
+    url: `/member/order/consignment/${id}`,
+  })
+}

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useGuessList } from '@/composables'
 import { onLoad, onReady } from '@dcloudio/uni-app'
-import { getMemberOrderByIdAPI } from '@/services/order'
+import { getMemberOrderByIdAPI, getMemberOrderConsignmentByIdAPI } from '@/services/order'
 import type { OrderResult } from '@/types/order'
 import { payMockAPI, payWxPayMiniPayAPI } from '@/services/pay'
 import { ref } from 'vue'
@@ -95,9 +95,12 @@ const OnTimeUp = () => {
   orderDetail.value!.orderState = OrderState.ALREADYCAMCEL
 }
 
+// 当前环境是否为开发环境
+const isDEV = import.meta.env.DEV
+
 // 订单支付
 const onOrderPay = async () => {
-  if (import.meta.env.DEV) {
+  if (isDEV) {
     // 开发环境模拟微信支付
     await payMockAPI({ orderId: query.id })
   } else {
@@ -107,6 +110,16 @@ const onOrderPay = async () => {
   }
   // 关闭当前页，再跳转至支付结果页
   uni.redirectTo({ url: `/pagesOrder/payment/payment?id=${query.id}` })
+}
+
+// 订单模拟发货
+const onOrderSend = async () => {
+  if (isDEV) {
+    await getMemberOrderConsignmentByIdAPI(query.id)
+    uni.showToast({ icon: 'success', title: '模拟发货成功' })
+    // 主动更新订单状态
+    orderDetail.value!.orderState = OrderState.WAITTOACCEPT
+  }
 }
 </script>
 
@@ -165,7 +178,13 @@ const onOrderPay = async () => {
               再次购买
             </navigator>
             <!-- 待发货状态：模拟发货,开发期间使用,用于修改订单状态为已发货 -->
-            <view v-if="false" class="button"> 模拟发货 </view>
+            <view
+              v-if="isDEV && orderDetail.orderState === OrderState.WAITTOSEND"
+              class="button"
+              @tap="onOrderSend"
+            >
+              模拟发货
+            </view>
           </view>
         </template>
       </view>
