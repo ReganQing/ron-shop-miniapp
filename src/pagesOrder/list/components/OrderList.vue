@@ -35,7 +35,7 @@
       <view class="action">
         <!-- 待付款状态：显示去支付按钮 -->
         <template v-if="order.orderState === OrderState.WAITTOPAY">
-          <view class="button primary">去支付</view>
+          <view class="button primary" @tap="onOrderPay(order.id)">去支付</view>
         </template>
         <template v-else>
           <navigator
@@ -52,7 +52,7 @@
         </template>
       </view>
     </view>
-    <!-- 底部提示文字 -->
+    <!-- 底部提示文字 todo 分页加载数据 -->
     <view class="loading-text" :style="{ paddingBottom: safeAreaInsets?.bottom + 'px' }">
       {{ true ? '没有更多数据~' : '正在加载...' }}
     </view>
@@ -62,6 +62,7 @@
 <script setup lang="ts">
 import { OrderState, orderStateList } from '@/services/constants'
 import { getMemberOrderAPI } from '@/services/order'
+import { payMockAPI, payWxPayMiniPayAPI } from '@/services/pay'
 import type { OrderItem } from '@/types/order'
 import type { OrderListParams } from '@/types/order'
 import { onMounted } from 'vue'
@@ -93,6 +94,26 @@ const getMemberOrderData = async () => {
 onMounted(() => {
   getMemberOrderData()
 })
+
+// 当前环境是否为开发环境
+const isDEV = import.meta.env.DEV
+
+// 订单支付
+const onOrderPay = async (id: string) => {
+  if (isDEV) {
+    // 开发环境模拟微信支付
+    await payMockAPI({ orderId: id })
+  } else {
+    // 生产环境正式微信支付
+    const res = await payWxPayMiniPayAPI({ orderId: id })
+    wx.requestPayment(res.result)
+  }
+  // 成功提示
+  uni.showToast({ icon: 'success', title: '支付成功' })
+  // 更新订单状态
+  const order = orderList.value.find((v) => v.id === id)
+  order!.orderState = OrderState.WAITTOSEND
+}
 </script>
 
 <style lang="scss">
