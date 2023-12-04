@@ -87,6 +87,12 @@ const getMemberOrderByIdData = async () => {
 onLoad(() => {
   getMemberOrderByIdData()
 })
+
+// 订单待付款倒计时
+const OnTimeUp = () => {
+  // 修改订单状态
+  orderDetail.value!.orderState = OrderState.ALREADYCAMCEL
+}
 </script>
 
 <template>
@@ -103,7 +109,13 @@ onLoad(() => {
       <view class="title">订单详情</view>
     </view>
   </view>
-  <scroll-view scroll-y class="viewport" id="scroller" @scrolltolower="onScrolltoLower">
+  <scroll-view
+    scroll-y
+    class="viewport"
+    id="scroller"
+    enable-back-to-top
+    @scrolltolower="onScrolltoLower"
+  >
     <template v-if="orderDetail">
       <!-- 订单状态 -->
       <view class="overview" :style="{ paddingTop: safeAreaInsets!.top + 20 + 'px' }">
@@ -113,7 +125,14 @@ onLoad(() => {
           <view class="tips">
             <text class="money">应付金额: ¥ 99.00</text>
             <text class="time">支付剩余</text>
-            00 时 29 分 59 秒
+            <uni-countdown
+              :second="orderDetail.countdown"
+              splitor-color="#fff"
+              color="#fff"
+              :show-day="false"
+              :show-colon="false"
+              @timeup="OnTimeUp"
+            />>
           </view>
           <view class="button">去支付</view>
         </template>
