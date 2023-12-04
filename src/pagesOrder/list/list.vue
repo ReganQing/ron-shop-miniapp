@@ -11,8 +11,12 @@ const orderTabs = ref([
   { orderState: 3, title: '待收货' },
   { orderState: 4, title: '待评价' },
 ])
+// 接收参数
+const query = defineProps<{
+  type: string
+}>()
 // 高亮下标
-const activeIndex = ref(0)
+const activeIndex = ref(orderTabs.value.findIndex((v) => v.orderState === +query.type))
 </script>
 
 <template>
