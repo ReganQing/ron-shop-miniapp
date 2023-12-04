@@ -71,3 +71,16 @@ export const getMemberOrderConsignmentByIdAPI = (id: string) => {
     url: `/member/order/consignment/${id}`,
   })
 }
+
+/**
+ * 确认收货
+ * @description 仅在订单状态为待收货时，可确认收货。
+ * @param id 订单id
+ * @returns 返回信息
+ */
+export const putMemberOrderReceiptByIdAPI = (id: string) => {
+  return http<OrderResult>({
+    method: 'PUT',
+    url: `/member/order/${id}/receipt`,
+  })
+}
