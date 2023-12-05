@@ -7,6 +7,7 @@ import {
   putMemberOrderReceiptByIdAPI,
   getMemberOrderLogisticsByIdAPI,
   deleteMemberOrderAPI,
+  putMemberOrderCancelByIdAPI,
 } from '@/services/order'
 import type { OrderResult, LogisticItem } from '@/types/order'
 import { payMockAPI, payWxPayMiniPayAPI } from '@/services/pay'
@@ -30,6 +31,9 @@ const reasonList = ref([
 ])
 // 订单取消原因
 const reason = ref('')
+const onReasonSelect = (selectedReason: string) => {
+  return (reason.value = selectedReason)
+}
 // 复制内容
 const onCopy = (id: string) => {
   // 设置系统剪贴板的内容
@@ -161,7 +165,7 @@ const getMemberOrderLogisticsByIdData = async () => {
 const onOrderDelete = () => {
   // 二次删除确认
   uni.showModal({
-    title: '删除确认',
+    title: '确认删除',
     content: '是否要删除订单',
     showCancel: true,
     cancelText: '取消',
@@ -176,6 +180,14 @@ const onOrderDelete = () => {
       }
     },
   })
+}
+
+// 取消订单
+const onOrderCancel = () => {
+  // 取消订单
+  putMemberOrderCancelByIdAPI(query.id, { cancelReason: reason.value })
+  // 订单取消之后，显示取消成功
+  uni.redirectTo({ url: `/pagesOrder/detail/detail?id=${query.id}` })
 }
 </script>
 
@@ -381,14 +393,14 @@ const onOrderDelete = () => {
       <view class="title">订单取消</view>
       <view class="description">
         <view class="tips">请选择取消订单的原因：</view>
-        <view class="cell" v-for="item in reasonList" :key="item" @tap="reason = item">
+        <view class="cell" v-for="item in reasonList" :key="item" @tap="onReasonSelect(item)">
           <text class="text">{{ item }}</text>
           <text class="icon" :class="{ checked: item === reason }"></text>
         </view>
       </view>
       <view class="footer">
         <view class="button" @tap="popup?.close?.()">取消</view>
-        <view class="button primary">确认</view>
+        <view class="button primary" @tap="onOrderCancel">确认</view>
       </view>
     </view>
   </uni-popup>

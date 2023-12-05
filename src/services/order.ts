@@ -126,3 +126,17 @@ export const getMemberOrderAPI = (data: OrderListParams) => {
     data,
   })
 }
+
+/**
+ * 取消订单
+ * @param id 订单id
+ * @param data 取消订单理由
+ * @returns 订单信息
+ */
+export const putMemberOrderCancelByIdAPI = (id: string, data: { cancelReason: string }) => {
+  return http({
+    method: 'PUT',
+    url: `/member/order/${id}/cancel`,
+    data,
+  })
+}

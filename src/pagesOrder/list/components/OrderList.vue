@@ -52,7 +52,7 @@
         </template>
       </view>
     </view>
-    <!-- 底部提示文字 todo 分页加载数据 -->
+    <!-- 底部提示文字 todo 下拉刷新和分页加载数据 -->
     <view class="loading-text" :style="{ paddingBottom: safeAreaInsets?.bottom + 'px' }">
       {{ true ? '没有更多数据~' : '正在加载...' }}
     </view>
