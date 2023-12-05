@@ -13,6 +13,7 @@ import type { OrderResult, LogisticItem } from '@/types/order'
 import { payMockAPI, payWxPayMiniPayAPI } from '@/services/pay'
 import { ref } from 'vue'
 import { OrderState, orderStateList } from '@/services/constants'
+import PageSkeleton from './components/PageSkeleton.vue'
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
@@ -184,9 +185,9 @@ const onOrderDelete = () => {
 
 // 取消订单
 const onOrderCancel = () => {
-  // 取消订单
+  // 向后端发送取消订单请求
   putMemberOrderCancelByIdAPI(query.id, { cancelReason: reason.value })
-  // 订单取消之后，显示取消成功
+  // 订单取消之后，返回到订单详情页
   uni.redirectTo({ url: `/pagesOrder/detail/detail?id=${query.id}` })
 }
 </script>
