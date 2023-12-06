@@ -13,6 +13,7 @@ import type {
 import { computed } from 'vue'
 import { postMemberCartAPI } from '@/services/cart'
 import type { AddressItem } from '@/types/address'
+import { useAddressStore } from '@/stores/modules/address'
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
@@ -126,16 +127,19 @@ const onBuyNow = (event: SkuPopupEvent) => {
 }
 
 // 商品详情页面配送地址的选择
-const address = ref<AddressItem>()
-const selectAddress = (selectedItem: AddressItem) => {
-  address.value = selectedItem
-  console.log(address.value)
+// 获取 store
+const orderStore = useAddressStore()
+// 修改收货地址
+const onSelectedAddress = (item: AddressItem) => {
+  // 修改选中地址
+  const addressStore = useAddressStore()
+  addressStore.changeSelectedAddress(item)
   popup.value?.close()
 }
 // 前端展示选择地址
 const showAddress = computed(() => {
-  if (address.value) {
-    return address.value?.fullLocation + address.value?.address
+  if (orderStore.selectedAddress) {
+    return orderStore.selectedAddress?.fullLocation + orderStore.selectedAddress?.address
   } else {
     return '请选择收获地址'
   }
@@ -275,7 +279,7 @@ onShow(() => {
       v-if="popupName === 'address'"
       @close="popup?.close()"
       :addressList="goods!.userAddresses"
-      @getAddress="selectAddress"
+      @getAddress="onSelectedAddress"
     />
   </uni-popup>
 </template>

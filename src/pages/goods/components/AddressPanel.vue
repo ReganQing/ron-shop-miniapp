@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { AddressItem } from '@/types/address'
-import { onShow } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 // 子调父
 const emit = defineEmits<{
