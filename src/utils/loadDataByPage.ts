@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 
 // 标记获取分页结束
-const finish = ref(false)
+export const finish = ref(false)
 
 // 重置数据
 export const resetData = (pageParams: any, itemList: any) => {

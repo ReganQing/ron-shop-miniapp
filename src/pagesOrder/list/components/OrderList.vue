@@ -61,13 +61,13 @@
     </view>
     <!-- 底部提示文字 todo 下拉刷新和分页加载数据 -->
     <view class="loading-text" :style="{ paddingBottom: safeAreaInsets?.bottom + 'px' }">
-      {{ isLoading ? '没有更多数据~' : '正在加载...' }}
+      {{ finish ? '没有更多数据~' : '正在加载...' }}
     </view>
   </scroll-view>
 </template>
 
 <script setup lang="ts">
-import { resetData, getMore } from '@/utils/loadDataByPage'
+import { finish, resetData, getMore } from '@/utils/loadDataByPage'
 import { OrderState, orderStateList } from '@/services/constants'
 import { getMemberOrderAPI } from '@/services/order'
 import { payMockAPI, payWxPayMiniPayAPI } from '@/services/pay'
@@ -75,6 +75,7 @@ import type { OrderItem } from '@/types/order'
 import type { OrderListParams } from '@/types/order'
 import { onMounted } from 'vue'
 import { ref } from 'vue'
+import { onLoad } from '@dcloudio/uni-app'
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
@@ -101,11 +102,14 @@ const getMemberOrderData = async () => {
 // 加载中标记
 const isLoading = ref(false)
 // 加载页面时加载数据
-// 页面加载完成时获取数据
-onMounted(async () => {
+onLoad(async () => {
   isLoading.value = true
   await getMemberOrderData()
   isLoading.value = false
+})
+// 页面加载完成时获取数据
+onMounted(() => {
+  getMemberOrderData()
 })
 
 // 当前环境是否为开发环境
